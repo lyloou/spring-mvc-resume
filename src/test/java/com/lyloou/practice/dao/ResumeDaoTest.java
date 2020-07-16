@@ -111,32 +111,32 @@ where resume0_.id=?
      * >     CriteriaQuery ⾃定义查询⽅式 ⽤不上
      * >     CriteriaBuilder 查询构造器，封装了很多的查询条件（like、=等等）
      */
-    @Test
-    public void testJpql() {
-        List<Resume> list = resumeDao.findByJpql(1l, "张三");
-        for (int i = 0; i < list.size(); i++) {
-            Resume resume = list.get(i);
-            System.out.println(resume);
-        }
-    }
-
-    @Test
-    public void testSql() {
-        List<Resume> list = resumeDao.findBySql("李%", "上海%");
-        for (int i = 0; i < list.size(); i++) {
-            Resume resume = list.get(i);
-            System.out.println(resume);
-        }
-    }
-
-    @Test
-    public void testMethodName() {
-        List<Resume> list = resumeDao.findByNameLikeAndAddress("李%", "上海");
-        for (int i = 0; i < list.size(); i++) {
-            Resume resume = list.get(i);
-            System.out.println(resume);
-        }
-    }
+//    @Test
+//    public void testJpql() {
+//        List<Resume> list = resumeDao.findByJpql(1l, "张三");
+//        for (int i = 0; i < list.size(); i++) {
+//            Resume resume = list.get(i);
+//            System.out.println(resume);
+//        }
+//    }
+//
+//    @Test
+//    public void testSql() {
+//        List<Resume> list = resumeDao.findBySql("李%", "上海%");
+//        for (int i = 0; i < list.size(); i++) {
+//            Resume resume = list.get(i);
+//            System.out.println(resume);
+//        }
+//    }
+//
+//    @Test
+//    public void testMethodName() {
+//        List<Resume> list = resumeDao.findByNameLikeAndAddress("李%", "上海");
+//        for (int i = 0; i < list.size(); i++) {
+//            Resume resume = list.get(i);
+//            System.out.println(resume);
+//        }
+//    }
 
     // 动态查询，查询单个对象
     @Test

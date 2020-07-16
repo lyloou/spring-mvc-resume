@@ -3,6 +3,7 @@ package com.lyloou.practice.controller;
 import com.lyloou.practice.dao.ResumeDao;
 import com.lyloou.practice.model.Resume;
 import com.lyloou.practice.util.CookieUtil;
+import com.lyloou.practice.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -24,29 +25,24 @@ public class ResumeController {
 
     @RequestMapping("/")
     public String login(HttpServletRequest request) {
-        if (CookieUtil.isLogined(request)) {
+        if (SessionUtil.isLogined(request)) {
             return "redirect:list";
         }
         return "index";
     }
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request, HttpServletResponse response, String username, String password) {
-        // 已经登录直接跳转
-        if (CookieUtil.isLogined(request)) {
+    public String loginSystem(String username, String password, HttpSession session) {
+        // 合法用户，信息写入session，同时跳转到系统主页面
+        if ("admin".equals(username) && "admin".equals(password)) {
+            System.out.println("合法用户");
+            session.setAttribute("username", username);
             return "redirect:list";
+        } else {
+            // 非法用户返回登录页面
+            System.out.println("非法，跳转");
+            return "redirect:/";
         }
-
-        // 验证用户名和密码
-        if (!"admin".equals(username) || !"admin".equals(password)) {
-            return "failed";
-        }
-
-        // 设置 cookie
-        Cookie cookie = new Cookie(CookieUtil.COOKIE_LOGIN_KEY, CookieUtil.COOKIE_LOGIN_VALUE);
-        cookie.setMaxAge(60 * 60 * 24);
-        response.addCookie(cookie);
-        return "redirect:list";
     }
 
     @RequestMapping("/list")
