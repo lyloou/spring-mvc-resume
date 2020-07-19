@@ -20,7 +20,7 @@ public class CookieUtil {
         }
         for (Cookie cookie : cookies) {
             if (COOKIE_LOGIN_KEY.equals(cookie.getName())) {
-                String session = (String) redisTemplate.opsForValue().get(COOKIE_LOGIN_KEY);
+                String session = (String) redisTemplate.opsForValue().get(cookie.getValue());
                 return session != null;
             }
         }
