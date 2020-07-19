@@ -5,9 +5,9 @@
   Time: 20:47
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page isELIgnored="false" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.lyloou.practice.model.Resume" %>
 <%@ page import="java.util.List" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>用户列表</title>
@@ -21,7 +21,7 @@
             id: _id
         };
         $.ajax({
-            url: '/deleteResume',
+            url: '${pageContext.request.contextPath}/deleteResume',
             type: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=utf-8',
@@ -43,7 +43,7 @@
             address: address.value
         };
         $.ajax({
-            url: '/updateResume',
+            url: '${pageContext.request.contextPath}/updateResume',
             type: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=utf-8',
@@ -76,7 +76,7 @@
             address: address.value
         };
         $.ajax({
-            url: '/addResume',
+            url: '${pageContext.request.contextPath}/addResume',
             type: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=utf-8',
@@ -86,6 +86,7 @@
         })
     }
 </script>
+
 <table>
     <tr>
         <th>ID</th>

@@ -1,6 +1,6 @@
 package com.lyloou.practice.interceptor;
 
-import com.lyloou.practice.util.SessionUtil;
+import com.lyloou.practice.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,6 +19,11 @@ public class MyInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return SessionUtil.isLogined(request);
+        if (CookieUtil.isLogin(request, redisTemplate)) {
+            return true;
+        } else {
+            response.sendRedirect(request.getContextPath() + "/");
+            return false;
+        }
     }
 }

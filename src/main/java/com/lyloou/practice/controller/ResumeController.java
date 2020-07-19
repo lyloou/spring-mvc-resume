@@ -3,18 +3,21 @@ package com.lyloou.practice.controller;
 import com.lyloou.practice.dao.ResumeDao;
 import com.lyloou.practice.model.Resume;
 import com.lyloou.practice.util.CookieUtil;
-import com.lyloou.practice.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import static com.lyloou.practice.util.CookieUtil.COOKIE_LOGIN_KEY;
 
 @Controller
 public class ResumeController {
@@ -22,21 +25,31 @@ public class ResumeController {
     @Autowired
     private ResumeDao resumeDao;
 
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @RequestMapping("/")
     public String login(HttpServletRequest request) {
-        if (SessionUtil.isLogined(request)) {
+        if (CookieUtil.isLogin(request, redisTemplate)) {
             return "redirect:list";
         }
         return "index";
     }
 
     @RequestMapping("/login")
-    public String loginSystem(String username, String password, HttpSession session) {
+    public String loginSystem(String username, String password, HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+
         // 合法用户，信息写入session，同时跳转到系统主页面
         if ("admin".equals(username) && "admin".equals(password)) {
             System.out.println("合法用户");
-            session.setAttribute("username", username);
+
+            Cookie cookie = new Cookie(COOKIE_LOGIN_KEY, session.getId());
+            cookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(cookie);
+
+            redisTemplate.opsForValue().set(session.getId(), username + "_" + System.currentTimeMillis());
+
             return "redirect:list";
         } else {
             // 非法用户返回登录页面
